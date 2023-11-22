@@ -18,3 +18,22 @@ services:
       - 26667
     env_file:
     - .env
+
+  traefik:
+    cpus: 4
+    mem_limit: 16G
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - 80:80       
+      - 443:443 
+      #- 8082:8082 #For prometheus metrics (OPTIONAL)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yaml:/traefik.yml:ro
+      - ./traefik/services/:/etc/traefik/services/:ro
+      - ./traefik/certs:/letsencrypt
+    labels:
+      - traefik.enable=true
+      - traefik.insecure=true
