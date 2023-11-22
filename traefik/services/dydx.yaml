@@ -1,0 +1,45 @@
+http:
+  routers:
+    dydx-rest:
+      rule: "Host(`INSERT_YOUR_SUBDOMAIN_FOR_DYDX_REST_API_ENDPOINT_HERE`)"
+      service: dydx-rest
+      priority: 1
+      entryPoints:
+      - web
+      - websecure
+      tls:
+        certResolver: https-resolver
+    dydx-tendermint:
+      rule: "Host(`INSERT_YOUR_SUBDOMAIN_FOR_DYDX_TENDERMINT_ENDPOINT_HERE`)"
+      service: dydx-tendermint
+      priority: 1
+      entryPoints:
+      - web
+      - websecure
+      tls:
+        certResolver: https-resolver
+    dydx-grpc:
+      rule: "Host(`INSERT_YOUR_SUBDOMAIN_FOR_DYDX_GRCP_ENDPOINT_HERE`)"
+      service: dydx-grpc
+      priority: 1
+      entryPoints:
+      - web
+      - websecure
+      tls:
+        certResolver: https-resolver
+  services:
+    dydx-tendermint:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://{INSERT_YOUR_NODE_IP_HERE}:{TENDERMINT_PORT}
+    dydx-grpc:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: h2c://{INSERT_YOUR_NODE_IP_HERE}:{GRPC_PORT}
+    dydx-rest:
+      loadbalancer:
+        passHostHeader: false
+        servers:
+          - url: http://{INSERT_YOUR_NODE_IP_HERE}:{REST_API_PORT}
